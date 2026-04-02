@@ -1,115 +1,106 @@
 "use client";
 
-import Link from "next/link";
-import { Shovel, Users, Truck, ArrowRight, CheckCircle } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { gsap } from "@/lib/gsap";
 
-const services = [
+const steps = [
   {
-    icon: Shovel,
-    title: "Machine verhuur",
-    description:
-      "A-merk shovels en minigravers voor elk project. Van compacte minigravers tot grote shovels — altijd goed onderhouden en klaar voor gebruik.",
-    features: ["Dag- en weektarieven", "Alle gewichtsklassen", "Inclusief keuring"],
-    href: "/machines",
-    highlight: false,
+    num: "01",
+    title: "Kies je machine",
+    description: "Bekijk ons aanbod en selecteer de machine die bij uw project past. A-merk Giant wielladers & minigravers.",
   },
   {
-    icon: Users,
-    title: "Met machinist",
-    description:
-      "Huur uw machine inclusief een ervaren, VCA-gecertificeerde machinist voor veilig en efficiënt werken op elke bouwlocatie.",
-    features: ["VCA-gecertificeerde operators", "Ruime grondverzet ervaring", "Flexibel inzetbaar"],
-    href: "/contact",
-    highlight: true,
+    num: "02",
+    title: "Plan je huurperiode",
+    description: "Geef eenvoudig de gewenste huur- en retourdatum aan. Flexibele perioden, geen minimale huurperiode.",
   },
   {
-    icon: Truck,
-    title: "Transport & levering",
-    description:
-      "Wij bezorgen de machine bij u op locatie en halen deze na afloop op. Snel, betrouwbaar en op het afgesproken tijdstip.",
-    features: ["Heel Nederland", "Eigen transport", "Flexibele planning"],
-    href: "/contact",
-    highlight: false,
+    num: "03",
+    title: "Regel het transport",
+    description: "Wil je de machine laten bezorgen? Voeg transport toe aan je reservering — wij zorgen voor de rest.",
   },
 ];
 
-export default function Services() {
-  return (
-    <section className="section-lg" style={{ background: "var(--bg)" }}>
-      <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-14">
+const usps = [
+  { icon: "✓", label: "Flexibel inzetbaar" },
+  { icon: "✓", label: "Duurzame werkwijze" },
+  { icon: "✓", label: "Kwaliteit & vakmanschap" },
+  { icon: "✓", label: "Machinist beschikbaar" },
+];
 
+export default function Services() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const cardsRef = useRef<HTMLDivElement[]>([]);
+
+  useEffect(() => {
+    gsap.fromTo(
+      cardsRef.current,
+      { y: 60, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.7,
+        stagger: 0.15,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+        },
+      }
+    );
+  }, []);
+
+  return (
+    <section id="diensten" ref={sectionRef} className="py-20 md:py-28 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-20">
-          <div className="label justify-center mb-5">Onze diensten</div>
-          <h2 className="heading" style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}>
-            Alles voor uw bouwproject
+        <div className="text-center mb-16">
+          <span className="text-[#F3812A] text-sm font-bold uppercase tracking-widest">
+            Hoe het werkt
+          </span>
+          <h2 className="text-3xl md:text-5xl font-bold text-[#111] mt-3 mb-4">
+            In 3 stappen geregeld
           </h2>
-          <p className="mt-5 text-base max-w-xl mx-auto" style={{ color: "var(--text-muted)" }}>
-            Van machinelevering tot vakkundige operator — wij ontzorgen u volledig.
+          <div className="w-16 h-1 bg-[#F3812A] mx-auto" />
+          <p className="text-[#7a8882] mt-6 max-w-xl mx-auto text-base">
+            Van machine selectie tot levering op locatie — snel, eenvoudig en professioneel.
           </p>
         </div>
 
-        {/* Cards */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {services.map((s, i) => {
-            const Icon = s.icon;
-            return (
-              <div
-                key={i}
-                className="rounded-2xl p-10 flex flex-col transition-all duration-250"
-                style={{
-                  background: s.highlight ? "var(--navy)" : "var(--white)",
-                  border: s.highlight ? "none" : "1px solid var(--border)",
-                  boxShadow: s.highlight ? "0 12px 40px rgba(27,52,100,0.3)" : "0 1px 4px rgba(0,0,0,0.04)",
-                }}
-              >
-                {/* Icon */}
-                <div
-                  className="w-14 h-14 rounded-xl flex items-center justify-center mb-8"
-                  style={{
-                    background: s.highlight ? "rgba(255,255,255,0.12)" : "var(--orange-bg)",
-                  }}
-                >
-                  <Icon size={22} style={{ color: s.highlight ? "white" : "var(--orange)" }} />
-                </div>
-
-                <h3
-                  className="font-bold text-xl mb-4"
-                  style={{ color: s.highlight ? "white" : "var(--text)" }}
-                >
-                  {s.title}
-                </h3>
-                <p
-                  className="text-sm leading-relaxed mb-8 flex-1"
-                  style={{ color: s.highlight ? "rgba(255,255,255,0.8)" : "var(--text-muted)" }}
-                >
-                  {s.description}
-                </p>
-
-                <ul className="space-y-3 mb-10">
-                  {s.features.map((f) => (
-                    <li key={f} className="flex items-center gap-2 text-sm">
-                      <CheckCircle
-                        size={14}
-                        style={{ color: s.highlight ? "rgba(255,255,255,0.8)" : "var(--orange)", flexShrink: 0 }}
-                      />
-                      <span style={{ color: s.highlight ? "rgba(255,255,255,0.85)" : "var(--text-soft)" }}>
-                        {f}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link
-                  href={s.href}
-                  className="inline-flex items-center gap-2 text-sm font-semibold mt-auto"
-                  style={{ color: s.highlight ? "white" : "var(--orange)" }}
-                >
-                  Meer informatie <ArrowRight size={14} />
-                </Link>
+        {/* Steps */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          {steps.map((step, i) => (
+            <div
+              key={step.num}
+              ref={(el) => { if (el) cardsRef.current[i] = el; }}
+              className="group relative bg-white border border-[#E8EBE9] rounded-lg p-8 hover:shadow-xl transition-all duration-300"
+              style={{ borderTop: "3px solid transparent" }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderTop = "3px solid #F3812A"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderTop = "3px solid transparent"; }}
+            >
+              <div className="text-5xl font-black mb-4" style={{ color: "rgba(43,110,79,0.12)", letterSpacing: "-0.04em" }}>
+                {step.num}
               </div>
-            );
-          })}
+              <h3 className="text-lg font-bold text-[#111] mb-3 group-hover:text-[#2B6E4F] transition-colors">
+                {step.title}
+              </h3>
+              <p className="text-[#7a8882] text-sm leading-relaxed">{step.description}</p>
+              <div className="mt-5 w-8 h-0.5 bg-[#F3812A] group-hover:w-16 transition-all duration-300" />
+            </div>
+          ))}
+        </div>
+
+        {/* USP bar */}
+        <div className="rounded-xl p-6 flex flex-wrap justify-center gap-6" style={{ background: "#2B6E4F" }}>
+          {usps.map((usp) => (
+            <div key={usp.label} className="flex items-center gap-2.5">
+              <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+                style={{ background: "#F3812A", color: "#fff" }}>
+                {usp.icon}
+              </span>
+              <span className="text-sm font-semibold text-white">{usp.label}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>

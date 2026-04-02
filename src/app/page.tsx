@@ -1,19 +1,21 @@
+import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import Ticker from "@/components/Ticker";
 import Services from "@/components/Services";
-import Machines from "@/components/Machines";
-import WhyUs from "@/components/WhyUs";
-import QuoteForm from "@/components/QuoteForm";
+import Fleet from "@/components/Fleet";
+import About from "@/components/About";
+import Contact from "@/components/Contact";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <>
+    <main>
+      <Header />
       <Hero />
-      <Ticker />
       <Services />
-      <Machines />
-      <WhyUs />
-      <QuoteForm />
-    </>
+      <Fleet />
+      <About />
+      <Contact />
+      <Footer />
+    </main>
   );
 }
