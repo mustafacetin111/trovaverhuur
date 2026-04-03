@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
         hostname: "trovaverhuur.nl",
         pathname: "/wp-content/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
     ],
   },
 };

@@ -1,265 +1,211 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CheckCircle } from "lucide-react";
+import { Phone } from "lucide-react";
+import { getAllEquipment } from "@/services/equipmentService";
+import EquipmentGrid from "@/components/equipment/EquipmentGrid";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Machines | Trova Verhuur & Transport",
-  description: "Ons volledige machinepark: minigravers en shovels van A-merken.",
+  title: "Machinepark | Trova Verhuur & Transport",
+  description:
+    "Huur A-merk grondverzetmachines: minigravers, shovels, wielladers en aanhangers. Directe beschikbaarheid, scherpe tarieven. Trovaverhuur Amsterdam.",
+  keywords:
+    "minigraver verhuur, shovel verhuur, wiellader verhuur, grondverzet machine huren, Amsterdam",
 };
 
-const machines = [
-  {
-    id: "minigraver-1-7",
-    name: "Minigraver 1.7T",
-    brand: "Kubota",
-    category: "Minigraver",
-    weight: "1.700 kg",
-    power: "11.6 kW",
-    depth: "230 cm",
-    width: "100 cm",
-    reach: "360 cm",
-    bucket: "0.04 m³",
-    dailyRate: "€ 180,–",
-    weeklyRate: "€ 750,–",
-    description: "Ideaal voor werkzaamheden op kleine, moeilijk bereikbare locaties. Past door smalle toegangspoorten en is perfect voor werk in tuinen en binnenruimtes.",
-    toepassingen: ["Tuinaanleg & herinrichting", "Rioleringswerk smalle ruimtes", "Sloopwerk binnenshuis", "Fundatie kleine bouwwerken"],
-    tags: ["Compact", "Tuin", "Stedelijk"],
-  },
-  {
-    id: "minigraver-3-5",
-    name: "Minigraver 3.5T",
-    brand: "Bobcat",
-    category: "Minigraver",
-    weight: "3.500 kg",
-    power: "24.4 kW",
-    depth: "320 cm",
-    width: "160 cm",
-    reach: "530 cm",
-    bucket: "0.10 m³",
-    dailyRate: "€ 240,–",
-    weeklyRate: "€ 980,–",
-    description: "Onze meest verhuurde machine. Veelzijdig, krachtig en compact. Geschikt voor vrijwel elk grondverzet project van kleine tot middelgrote omvang.",
-    toepassingen: ["Grondwerk nieuwbouw & verbouw", "Riolering & leidingwerk", "Vijver & drainage aanleg", "Fundaties & kelderwerk"],
-    tags: ["Meest verhuurd", "Veelzijdig"],
-    featured: true,
-  },
-  {
-    id: "minigraver-6t",
-    name: "Minigraver 6T",
-    brand: "Volvo",
-    category: "Minigraver",
-    weight: "6.000 kg",
-    power: "40.5 kW",
-    depth: "410 cm",
-    width: "220 cm",
-    reach: "660 cm",
-    bucket: "0.22 m³",
-    dailyRate: "€ 320,–",
-    weeklyRate: "€ 1.280,–",
-    description: "Voor zwaarder grondverzet en grotere diepten. Ideaal voor aannemers die meer vermogen nodig hebben zonder over te stappen op een volwaardige shovel.",
-    toepassingen: ["Zwaar grondverzet", "Fundatiegraven", "Sloopwerkzaamheden", "Agrarisch grondwerk"],
-    tags: ["Fundatie", "Zwaarder werk"],
-  },
-  {
-    id: "shovel-13t",
-    name: "Shovel 13T",
-    brand: "Caterpillar",
-    category: "Shovel",
-    weight: "13.000 kg",
-    power: "67.3 kW",
-    depth: "510 cm",
-    width: "260 cm",
-    reach: "870 cm",
-    bucket: "0.57 m³",
-    dailyRate: "€ 480,–",
-    weeklyRate: "€ 1.900,–",
-    description: "De krachtpatser van ons machinepark. Voor grootschalige grondverzetprojecten, wegenbouw en zware infrastructuurwerken. Altijd beschikbaar met of zonder machinist.",
-    toepassingen: ["Wegenbouw & infrastructuur", "Grootschalig grondverzet", "Industrieel sloopwerk", "Baggerwerkzaamheden"],
-    tags: ["Zwaar", "Infrastructuur"],
-  },
-];
+export default async function MachinesPage() {
+  const equipment = await getAllEquipment();
 
-export default function MachinesPage() {
+  const stats = [
+    { num: `${equipment.length}`, label: "Machines beschikbaar" },
+    { num: "A-merk", label: "Kubota · Bobcat · Volvo · CAT · Giant" },
+    { num: "24u", label: "Responstijd offerte" },
+  ];
+
   return (
-    <div style={{ paddingTop: "4rem" }}>
-      {/* Header */}
-      <section
-        className="py-20"
-        style={{ background: "var(--white)", borderBottom: "1px solid var(--border)" }}
-      >
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="label mb-4">Machinepark</div>
-          <h1
-            className="heading mb-5"
-            style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)" }}
-          >
-            Onze <span style={{ color: "var(--orange)" }}>machines</span>
-          </h1>
-          <p className="text-lg max-w-xl" style={{ color: "var(--text-muted)" }}>
-            A-merk grondverzet machines voor elk project — van minigraver tot shovel.
-            Alle machines zijn goed onderhouden en direct beschikbaar.
-          </p>
-        </div>
-      </section>
+    <>
+      <Header />
+      <main style={{ paddingTop: "4rem" }}>
 
-      {/* Machines list */}
-      <section className="section" style={{ background: "var(--bg)" }}>
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="space-y-6">
-            {machines.map((m, i) => (
-              <div
-                key={m.id}
-                id={m.id}
-                className="rounded-2xl overflow-hidden"
-                style={{
-                  background: "var(--white)",
-                  border: m.featured ? "2px solid var(--orange)" : "1px solid var(--border)",
-                }}
+        {/* ── Page hero ───────────────────────────────────────────────────── */}
+        <section
+          className="relative overflow-hidden py-20 lg:py-28"
+          style={{ background: "linear-gradient(135deg, #0a1510 0%, #0f1d16 100%)" }}
+        >
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(ellipse 50% 80% at 110% 50%, rgba(243,129,42,0.1) 0%, transparent 60%)",
+            }}
+          />
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            {/* Breadcrumb */}
+            <nav className="flex items-center gap-2 text-xs font-medium mb-8">
+              <Link
+                href="/"
+                className="transition-colors duration-150"
+                style={{ color: "rgba(255,255,255,0.4)" }}
+                onMouseEnter={(e) =>
+                  ((e.currentTarget as HTMLElement).style.color = "#F3812A")
+                }
+                onMouseLeave={(e) =>
+                  ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.4)")
+                }
               >
-                {m.featured && (
-                  <div
-                    className="px-6 py-2 text-xs font-bold text-white text-center"
-                    style={{ background: "var(--orange)" }}
+                Home
+              </Link>
+              <span style={{ color: "rgba(255,255,255,0.2)" }}>/</span>
+              <span style={{ color: "rgba(255,255,255,0.7)" }}>Machines</span>
+            </nav>
+
+            <span
+              className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] px-3 py-1.5 rounded-full mb-5"
+              style={{
+                background: "rgba(243,129,42,0.15)",
+                color: "#F3812A",
+                border: "1px solid rgba(243,129,42,0.3)",
+              }}
+            >
+              Ons machinepark
+            </span>
+
+            <h1
+              className="font-extrabold text-white mb-4"
+              style={{
+                fontSize: "clamp(2.4rem, 6vw, 4.5rem)",
+                letterSpacing: "-0.04em",
+                lineHeight: 1.05,
+              }}
+            >
+              Onze{" "}
+              <span style={{ color: "#F3812A" }}>machines</span>
+            </h1>
+
+            <div className="w-14 h-1 mb-6" style={{ background: "#F3812A" }} />
+
+            <p
+              className="text-base leading-relaxed max-w-xl mb-10"
+              style={{ color: "rgba(255,255,255,0.58)" }}
+            >
+              A-merk grondverzetmachines voor elk project — van compacte minigraver
+              tot zware shovel. Alle machines zijn goed onderhouden en direct beschikbaar.
+            </p>
+
+            {/* Stats */}
+            <div className="flex flex-wrap gap-8">
+              {stats.map((s) => (
+                <div key={s.label}>
+                  <p
+                    className="font-extrabold text-2xl"
+                    style={{ color: "#F3812A", letterSpacing: "-0.03em" }}
                   >
-                    Meest verhuurd
-                  </div>
-                )}
-                <div className="grid lg:grid-cols-3 gap-0">
-                  {/* Left visual */}
-                  <div
-                    className="flex items-center justify-center p-8"
-                    style={{
-                      background: m.featured
-                        ? "linear-gradient(135deg, #FFF4EE, #FFE8D6)"
-                        : "var(--bg)",
-                      borderRight: "1px solid var(--border)",
-                    }}
+                    {s.num}
+                  </p>
+                  <p
+                    className="text-xs mt-0.5 uppercase tracking-wider"
+                    style={{ color: "rgba(255,255,255,0.4)" }}
                   >
-                    <svg viewBox="0 0 260 180" className="w-full max-w-xs" fill="none">
-                      <ellipse cx="130" cy="162" rx="100" ry="12" fill="rgba(0,0,0,0.05)" />
-                      <rect x="0" y="148" width="260" height="32" fill={m.featured ? "rgba(232,96,10,0.06)" : "#ECEAE6"} rx="4" />
-                      <rect x="25" y="118" width="110" height="32" rx="16" fill={m.featured ? "#F5C9A8" : "#D0CAC2"} />
-                      <rect x="30" y="122" width="100" height="24" rx="12" fill={m.featured ? "#EDBA92" : "#C2BAB0"} />
-                      {[38, 56, 74, 94, 112].map((x, j) => (
-                        <rect key={j} x={x} y="122" width="12" height="24" rx="3" fill={m.featured ? "#E0A870" : "#B4ACA4"} />
-                      ))}
-                      <rect x="38" y="80" width="94" height="42" rx="7" fill={m.featured ? "#E8BF9A" : "#CACED4"} />
-                      <rect x="52" y="90" width="66" height="26" rx="4" fill={m.featured ? "#D4AB82" : "#BEB6AC"} />
-                      <rect x="92" y="52" width="48" height="36" rx="5" fill={m.featured ? "#CDAD85" : "#B8B0A8"} />
-                      <rect x="98" y="60" width="16" height="12" rx="2" fill={m.featured ? "rgba(232,96,10,0.35)" : "rgba(0,0,0,0.1)"} />
-                      <rect x="118" y="60" width="15" height="12" rx="2" fill={m.featured ? "rgba(232,96,10,0.25)" : "rgba(0,0,0,0.07)"} />
-                      <rect x="46" y="48" width="9" height="64" rx="4.5" fill={m.featured ? "#BEA880" : "#B0A8A0"} transform="rotate(-22 46 48)" />
-                      <rect x="86" y="28" width="8" height="52" rx="4" fill={m.featured ? "#B89C74" : "#A8A09A"} transform="rotate(14 86 28)" />
-                      <path d="M106 116 L126 112 L131 126 L114 135 L100 130 Z" fill={m.featured ? "var(--orange)" : "#8A8480"} />
-                      {[108, 116, 124].map((x, j) => (
-                        <rect key={j} x={x} y="133" width="5" height="7" rx="1.5" fill={m.featured ? "var(--orange-dark)" : "#767070"} />
-                      ))}
-                    </svg>
-                  </div>
-
-                  {/* Middle: info */}
-                  <div className="p-8">
-                    <div className="text-xs font-semibold mb-1" style={{ color: "var(--text-dim)" }}>
-                      {m.brand} — {m.category}
-                    </div>
-                    <h2 className="font-extrabold text-2xl mb-3" style={{ color: "var(--text)" }}>
-                      {m.name}
-                    </h2>
-                    <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-muted)" }}>
-                      {m.description}
-                    </p>
-
-                    {/* Specs */}
-                    <div className="grid grid-cols-3 gap-2 mb-5">
-                      {[
-                        { label: "Gewicht", value: m.weight },
-                        { label: "Vermogen", value: m.power },
-                        { label: "Graafdiepte", value: m.depth },
-                        { label: "Breedte", value: m.width },
-                        { label: "Bereik", value: m.reach },
-                        { label: "Bak", value: m.bucket },
-                      ].map(({ label, value }) => (
-                        <div
-                          key={label}
-                          className="rounded-lg p-2.5 text-center"
-                          style={{ background: "var(--bg)", border: "1px solid var(--border)" }}
-                        >
-                          <div className="text-xs" style={{ color: "var(--text-dim)" }}>{label}</div>
-                          <div className="text-xs font-bold mt-0.5" style={{ color: "var(--text-soft)" }}>
-                            {value}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-1.5">
-                      {m.tags.map((t) => (
-                        <span
-                          key={t}
-                          className="text-xs font-medium px-2.5 py-1 rounded-full"
-                          style={{
-                            background: m.featured ? "var(--orange-bg)" : "var(--surface-2)",
-                            color: m.featured ? "var(--orange)" : "var(--text-muted)",
-                          }}
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Right: price + CTA */}
-                  <div
-                    className="p-8 flex flex-col justify-between"
-                    style={{ borderLeft: "1px solid var(--border)" }}
-                  >
-                    <div>
-                      <div className="text-xs font-semibold mb-1" style={{ color: "var(--text-dim)" }}>
-                        Dagtarief
-                      </div>
-                      <div className="font-extrabold text-3xl mb-1" style={{ color: "var(--orange)" }}>
-                        {m.dailyRate}
-                      </div>
-                      <div className="text-sm" style={{ color: "var(--text-muted)" }}>
-                        {m.weeklyRate} / week
-                      </div>
-
-                      <div className="mt-6">
-                        <div className="text-xs font-semibold mb-3" style={{ color: "var(--text-soft)" }}>
-                          Toepassingen
-                        </div>
-                        <div className="space-y-1.5">
-                          {m.toepassingen.map((t) => (
-                            <div key={t} className="flex items-center gap-2 text-xs">
-                              <CheckCircle size={12} style={{ color: "var(--orange)", flexShrink: 0 }} />
-                              <span style={{ color: "var(--text-muted)" }}>{t}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    <Link
-                      href="/contact"
-                      className="btn btn-primary mt-6 justify-center"
-                    >
-                      Huur deze machine <ArrowRight size={15} />
-                    </Link>
-                  </div>
+                    {s.label}
+                  </p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          <p className="text-center text-sm mt-8" style={{ color: "var(--text-dim)" }}>
-            Tarieven exclusief BTW. —{" "}
-            <Link href="/contact" style={{ color: "var(--orange)" }}>
-              Vraag een vrijblijvende offerte aan
-            </Link>
-          </p>
-        </div>
-      </section>
-    </div>
+          <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: "#F3812A" }} />
+        </section>
+
+        {/* ── Equipment grid ───────────────────────────────────────────────── */}
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <EquipmentGrid equipment={equipment} />
+          </div>
+        </section>
+
+        {/* ── CTA section ─────────────────────────────────────────────────── */}
+        <section className="py-16" style={{ background: "#f7f9f8" }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div
+              className="rounded-2xl overflow-hidden grid lg:grid-cols-2"
+              style={{ background: "linear-gradient(135deg, #0f1d16, #1a3324)" }}
+            >
+              <div className="p-10 lg:p-14">
+                <span
+                  className="text-[10px] font-bold uppercase tracking-[0.18em] mb-4 block"
+                  style={{ color: "#F3812A" }}
+                >
+                  Specifieke wensen?
+                </span>
+                <h2
+                  className="font-extrabold text-white mb-4"
+                  style={{ fontSize: "clamp(1.6rem, 3vw, 2.4rem)", letterSpacing: "-0.03em" }}
+                >
+                  Machine niet gevonden?
+                  <br />
+                  <span style={{ color: "#F3812A" }}>Neem contact op.</span>
+                </h2>
+                <p
+                  className="text-sm leading-relaxed mb-8"
+                  style={{ color: "rgba(255,255,255,0.55)" }}
+                >
+                  Wij hebben een uitgebreid netwerk van partnermachineparken.
+                  Vrijwel elke machine is bespreekbaar — ook voor langdurige verhuur.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Link href="/contact" className="btn-primary">
+                    Offerte aanvragen
+                  </Link>
+                  <a
+                    href="tel:0203086849"
+                    className="flex items-center gap-2 px-5 py-3 rounded font-bold text-sm uppercase tracking-wide transition-all duration-200"
+                    style={{ border: "2px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.8)" }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.borderColor = "#F3812A";
+                      (e.currentTarget as HTMLElement).style.color = "#F3812A";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.2)";
+                      (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.8)";
+                    }}
+                  >
+                    <Phone size={14} />
+                    020-3086849
+                  </a>
+                </div>
+              </div>
+
+              <div
+                className="p-10 lg:p-14 flex flex-col justify-center gap-4"
+                style={{ borderLeft: "1px solid rgba(255,255,255,0.07)" }}
+              >
+                {[
+                  "Geen minimale huurperiode",
+                  "Transport & bezorging mogelijk",
+                  "VCA-gecertificeerde machinisten",
+                  "Offerte binnen 24 uur",
+                  "Flexibele dag-, week- en maandtarieven",
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-3 text-sm">
+                    <span
+                      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[11px] font-bold"
+                      style={{ background: "#F3812A", color: "white" }}
+                    >
+                      ✓
+                    </span>
+                    <span style={{ color: "rgba(255,255,255,0.7)" }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
   );
 }
